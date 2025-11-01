@@ -1,0 +1,29 @@
+services:
+  # Backend API Service
+  - type: web
+    name: mgnrega-backend
+    runtime: node
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    healthCheckPath: /api/health
+
+  # Frontend Static Site
+  - type: web
+    name: mgnrega-frontend
+    runtime: node
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npx serve -s dist -p $PORT
+    envVars:
+      - key: NODE_ENV
+        value: production
