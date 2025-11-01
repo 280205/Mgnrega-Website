@@ -3,7 +3,13 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-app.use(cors());
+// CORS configuration - allow from environment variable or all origins in development
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || '*',
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Health check
@@ -345,12 +351,13 @@ app.get('/api/performance/compare/:districtCode', (req, res) => {
   res.json({ success: true, data, source: 'mock' });
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-  console.log(`\n🚀 Mock API Server running on http://localhost:${PORT}`);
+// Use Render's PORT environment variable, fallback to 5000 for local development
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🚀 Mock API Server running on port ${PORT}`);
   console.log(`📊 API Endpoints available:`);
-  console.log(`   - http://localhost:${PORT}/api/health`);
-  console.log(`   - http://localhost:${PORT}/api/districts/UP`);
-  console.log(`   - http://localhost:${PORT}/api/performance/current/UP001`);
+  console.log(`   - /api/health`);
+  console.log(`   - /api/districts/UP`);
+  console.log(`   - /api/performance/current/UP001`);
   console.log(`\n✨ Ready to serve the frontend!\n`);
 });
